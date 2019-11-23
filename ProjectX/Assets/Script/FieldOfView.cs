@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class FieldOfView : MonoBehaviour {
 
@@ -31,29 +32,52 @@ public class FieldOfView : MonoBehaviour {
 
     bool isDetected = false;
 
-    
+    bool isInside = false;
 
-	void Start() {
+    bool hasEscaped = false;
+
+    Vector3 enemypos;
+
+    public float enemyRadius;
+
+    int SurroundingMembers = 0;
+
+   
+
+   
+
+
+
+
+
+
+
+    void Start() {
 		viewMesh = new Mesh ();
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
+        StartCoroutine("FindTargetsWithDelay", .2f);
 
-		StartCoroutine ("FindTargetsWithDelay", .2f);
         enemy = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
 	}
 
+    IEnumerator FindTargetsWithDelay(float delay)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(delay);
+            FindVisibleTargets();
+        }
+    }
 
-	IEnumerator FindTargetsWithDelay(float delay) {
-		while (true) {
-			yield return new WaitForSeconds (delay);
-			FindVisibleTargets ();
-		}
-	}
 
-	void LateUpdate() {
+    void LateUpdate() {
 		DrawFieldOfView ();
         EnemyBehaviour();
+        FindVisibleTargets();
+        
+
 	}
 
 	void FindVisibleTargets() {
@@ -66,11 +90,15 @@ public class FieldOfView : MonoBehaviour {
 			if (Vector3.Angle (transform.forward, dirToTarget) < viewAngle / 2) {
 				float dstToTarget = Vector3.Distance (transform.position, target.position);
 				if (!Physics.Raycast (transform.position, dirToTarget, dstToTarget, obstacleMask)) {
-					visibleTargets.Add (target);
+					visibleTargets.Add (target);         
                     enemy.SetDestination(player.transform.position);
                     isDetected = true;
-
+                    isInside =true;
+                   
+                    //StartCoroutine(IsInsideCountdown());
                 }
+               
+                
 			}
 		}
 	}
@@ -201,6 +229,45 @@ public class FieldOfView : MonoBehaviour {
 
         }
     }
+    void Patrolafterdetection()
+    {
+        StartCoroutine(PatrolRandomizer2());
+        
+
+    }
+    IEnumerator IsInsideCountdown()
+    {
+        yield return new WaitForSeconds(2);
+       
+        if (isInside == true && hasEscaped ==false)
+        {
+
+
+            SceneManager.LoadScene("Scene1");
+        }
+
+    }
+    
+    IEnumerator PatrolRandomizer2()
+    {
+        enemy.SetDestination(new Vector3(Random.Range(player.transform.position.x + enemyRadius, player.transform.position.x - enemyRadius), transform.position.y, Random.Range(player.transform.position.z + enemyRadius, player.transform.position.z - enemyRadius)));
+        yield return new WaitForSeconds(1);
+        enemy.SetDestination(new Vector3(Random.Range(transform.position.x + enemyRadius, transform.position.x - enemyRadius), transform.position.y, Random.Range(transform.position.z + enemyRadius, transform.position.z - enemyRadius)));
+        yield return new WaitForSeconds(1);
+        enemy.SetDestination(new Vector3(Random.Range(transform.position.x + enemyRadius, transform.position.x - enemyRadius), transform.position.y, Random.Range(transform.position.z + enemyRadius, transform.position.z - enemyRadius)));
+
+
+
+
+    }
+    IEnumerator LastChecking()
+    {
+        yield return new WaitForSeconds(1.5f);
+        isDetected = false;
+        Patrolafterdetection();
+    }
+
+   
     
     
 
