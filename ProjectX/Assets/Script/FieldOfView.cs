@@ -30,17 +30,23 @@ public class FieldOfView : MonoBehaviour {
 
     GameObject player;
 
-    bool isDetected = false;
+    int isDetected = 0;
 
     bool isInside = false;
 
-    bool hasEscaped = false;
+    bool PlayerEnteredTheAngle;
 
     Vector3 enemypos;
 
+    public float targetTime = 1.8f;
+
     public float enemyRadius;
 
+    public float escapeTime = 3f;
+
     int SurroundingMembers = 0;
+
+
 
    
 
@@ -81,26 +87,51 @@ public class FieldOfView : MonoBehaviour {
 	}
 
 	void FindVisibleTargets() {
+        Debug.Log(targetTime);
 		visibleTargets.Clear ();
 		Collider[] targetsInViewRadius = Physics.OverlapSphere (transform.position, viewRadius, targetMask);
-
+        
 		for (int i = 0; i < targetsInViewRadius.Length; i++) {
 			Transform target = targetsInViewRadius [i].transform;
 			Vector3 dirToTarget = (target.position - transform.position).normalized;
 			if (Vector3.Angle (transform.forward, dirToTarget) < viewAngle / 2) {
 				float dstToTarget = Vector3.Distance (transform.position, target.position);
 				if (!Physics.Raycast (transform.position, dirToTarget, dstToTarget, obstacleMask)) {
-					visibleTargets.Add (target);         
-                    enemy.SetDestination(player.transform.position);
-                    isDetected = true;
-                    isInside =true;
+                    Debug.Log("hi1");
+                    PlayerEnteredTheAngle = true;
+					visibleTargets.Add (target);
+                    viewRadius += 0.0045f;
+                    isDetected = 1;
+                    escapeTime = 3;
+                    
+                    targetTime -= Time.deltaTime;
+                    if (targetTime<0)
+                    {
+                        SceneManager.LoadScene("Scene1");
+                    }
                    
-                    //StartCoroutine(IsInsideCountdown());
+                   
                 }
-               
                 
 			}
+            else
+            {
+                targetTime = 1.8f;
+                if(isDetected==1)
+                {
+                    escapeTime -= Time.deltaTime;
+                    if (escapeTime < 0)
+                    {
+                        isDetected = 2;
+                        StartCoroutine(PatrolRandomizer2());
+                    }
+                }
+                
+               
+                
+            }
 		}
+
 	}
 
 	void DrawFieldOfView() {
@@ -223,7 +254,7 @@ public class FieldOfView : MonoBehaviour {
     //atakan ekleme part
     void EnemyBehaviour()
     {
-        if (isDetected == true)
+        if (isDetected == 1)
         {
             enemy.SetDestination(player.transform.position);
 
@@ -231,41 +262,37 @@ public class FieldOfView : MonoBehaviour {
     }
     void Patrolafterdetection()
     {
-        StartCoroutine(PatrolRandomizer2());
-        
-
-    }
-    IEnumerator IsInsideCountdown()
-    {
-        yield return new WaitForSeconds(2);
-       
-        if (isInside == true && hasEscaped ==false)
+        if(isDetected ==2)
         {
-
-
-            SceneManager.LoadScene("Scene1");
+            StartCoroutine(PatrolRandomizer2());
         }
+        
+        
 
     }
     
     IEnumerator PatrolRandomizer2()
     {
-        enemy.SetDestination(new Vector3(Random.Range(player.transform.position.x + enemyRadius, player.transform.position.x - enemyRadius), transform.position.y, Random.Range(player.transform.position.z + enemyRadius, player.transform.position.z - enemyRadius)));
-        yield return new WaitForSeconds(1);
-        enemy.SetDestination(new Vector3(Random.Range(transform.position.x + enemyRadius, transform.position.x - enemyRadius), transform.position.y, Random.Range(transform.position.z + enemyRadius, transform.position.z - enemyRadius)));
-        yield return new WaitForSeconds(1);
-        enemy.SetDestination(new Vector3(Random.Range(transform.position.x + enemyRadius, transform.position.x - enemyRadius), transform.position.y, Random.Range(transform.position.z + enemyRadius, transform.position.z - enemyRadius)));
+        if(isDetected ==2)
+        {
+            enemy.SetDestination(new Vector3(Random.Range(player.transform.position.x + enemyRadius, player.transform.position.x - enemyRadius), transform.position.y, Random.Range(player.transform.position.z + enemyRadius, player.transform.position.z - enemyRadius)));
+            yield return new WaitForSeconds(2);
+            enemy.SetDestination(new Vector3(Random.Range(player.transform.position.x + enemyRadius-1, player.transform.position.x - enemyRadius-1), transform.position.y, Random.Range(player.transform.position.z + enemyRadius-1, player.transform.position.z - enemyRadius-1)));
+            yield return new WaitForSeconds(2);
+            enemy.SetDestination(new Vector3(Random.Range(player.transform.position.x + enemyRadius-2, player.transform.position.x - enemyRadius-2), transform.position.y, Random.Range(player.transform.position.z + enemyRadius-2, player.transform.position.z - enemyRadius-2)));
+            yield return new WaitForSeconds(3);
+            isDetected = 0;
+            viewRadius -= 0.0045f;
+
+
+        }
+       
 
 
 
 
     }
-    IEnumerator LastChecking()
-    {
-        yield return new WaitForSeconds(1.5f);
-        isDetected = false;
-        Patrolafterdetection();
-    }
+   
 
    
     
