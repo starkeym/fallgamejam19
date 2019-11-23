@@ -43,7 +43,7 @@ public class PlayerScript : MonoBehaviour
 
         moveDirection.y -= gravity * Time.deltaTime;
 
-        if(Input.GetKeyDown("d") || Input.GetKeyDown("a") || Input.GetKeyDown("w")|| Input.GetKeyDown("s"))
+        if(Input.GetKey("d") || Input.GetKey("a") || Input.GetKey("w")|| Input.GetKey("s"))
         {
             characterController.Move(moveDirection * Time.deltaTime);
             isMoving = true;

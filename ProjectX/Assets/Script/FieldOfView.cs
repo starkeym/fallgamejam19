@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 
 public class FieldOfView : MonoBehaviour {
 
@@ -23,12 +24,23 @@ public class FieldOfView : MonoBehaviour {
 	public MeshFilter viewMeshFilter;
 	Mesh viewMesh;
 
+    //atakan eklentileri
+    NavMeshAgent enemy;
+
+    GameObject player;
+
+    bool isDetected = false;
+
+    
+
 	void Start() {
 		viewMesh = new Mesh ();
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
 
 		StartCoroutine ("FindTargetsWithDelay", .2f);
+        enemy = GetComponent<NavMeshAgent>();
+        player = GameObject.FindGameObjectWithTag("Player");
 	}
 
 
@@ -41,6 +53,7 @@ public class FieldOfView : MonoBehaviour {
 
 	void LateUpdate() {
 		DrawFieldOfView ();
+        EnemyBehaviour();
 	}
 
 	void FindVisibleTargets() {
@@ -54,7 +67,10 @@ public class FieldOfView : MonoBehaviour {
 				float dstToTarget = Vector3.Distance (transform.position, target.position);
 				if (!Physics.Raycast (transform.position, dirToTarget, dstToTarget, obstacleMask)) {
 					visibleTargets.Add (target);
-				}
+                    enemy.SetDestination(player.transform.position);
+                    isDetected = true;
+
+                }
 			}
 		}
 	}
@@ -175,5 +191,17 @@ public class FieldOfView : MonoBehaviour {
 			pointB = _pointB;
 		}
 	}
+
+    //atakan ekleme part
+    void EnemyBehaviour()
+    {
+        if (isDetected == true)
+        {
+            enemy.SetDestination(player.transform.position);
+
+        }
+    }
+    
+    
 
 }

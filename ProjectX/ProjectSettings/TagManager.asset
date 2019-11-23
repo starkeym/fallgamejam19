@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Tags
+  - Targets
+  - Obstacles
   layers:
   - Default
   - TransparentFX
@@ -14,9 +16,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Targets
+  - Obstacles
+  - Enemies
   - 
   - 
   - 
