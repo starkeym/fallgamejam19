@@ -13,13 +13,19 @@ public class TrailEffect : MonoBehaviour
             an.SetBool("IsAttacking",true);
             trail.SetActive(true);
             StartCoroutine(timer());
+            StartCoroutine(Trailtimer());
         }
     }
     IEnumerator timer() {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.1f);
 
         an.SetBool("IsAttacking", false);
         
+    }
+    IEnumerator Trailtimer()
+    {
+        yield return new WaitForSeconds(0.22f);
+
         trail.SetActive(false);
     }
 }
