@@ -23,6 +23,7 @@ public class BatterScript : MonoBehaviour
             Destroy(this.gameObject);
 
         }
+       
         
 
     }
