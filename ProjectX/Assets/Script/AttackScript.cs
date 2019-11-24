@@ -12,21 +12,27 @@ public class AttackScript : MonoBehaviour
     void Start()
     {
         Attack = GameObject.FindGameObjectWithTag("Attackablearea");
+        gameObject.GetComponent<BoxCollider>().enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetMouseButton(0))
+        {
+            StartCoroutine(countdown());
+        }
         
+       
     }
     private void OnTriggerStay(Collider other)
     {
-        if((other.gameObject.tag=="Enemy" && FieldOfView.canbeKilled==true && Input.GetMouseButtonDown(0)) || (other.gameObject.tag =="Standingenemy" && FieldOfView.canbeKilled == true && Input.GetMouseButtonDown(0)))
+        if((other.gameObject.tag=="Enemy" && FieldOfView.canbeKilled==true ) || (other.gameObject.tag =="Standingenemy" && FieldOfView.canbeKilled == true ))
         {
             Destroy(other.gameObject);
             
         }
-        if ((other.gameObject.tag == "Robot" && FieldOfView.canbeKilled == true && Input.GetMouseButtonDown(0)) || (other.gameObject.tag == "Standingrobot" && FieldOfView.canbeKilled == true && Input.GetMouseButtonDown(0)))
+        if ((other.gameObject.tag == "Robot" && FieldOfView.canbeKilled == true) || (other.gameObject.tag == "Standingrobot" && FieldOfView.canbeKilled == true ))
         {
             
             Destroy(other.gameObject);
@@ -57,6 +63,12 @@ public class AttackScript : MonoBehaviour
 
 
         }
+    }
+    IEnumerator countdown()
+    {
+        gameObject.GetComponent<BoxCollider>().enabled = true;
+        yield return new WaitForSeconds(0.1f);
+         gameObject.GetComponent<BoxCollider>().enabled = false;
     }
 
 }

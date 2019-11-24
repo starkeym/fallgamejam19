@@ -20,7 +20,7 @@ public class PlayerScript : MonoBehaviour
 
     bool BatteryCollected = false;
 
-    public static float Health = 100;
+    public static float Health = 1;
 
     void Start()
     {
@@ -59,19 +59,19 @@ public class PlayerScript : MonoBehaviour
     }
     void Battery()
     {
-        if(Health >= 100)
+        if(Health >= 1)
         {
-            Health = 100;
+            Health = 1;
         }
         if(isMoving==true)
         {
 
-            Health -= Time.deltaTime + 0.5f;
+            Health = 0.4f;
 
         }
         if(BatteryCollected ==true)
         {
-            Health += 10;
+            Health += 0.1f;
             BatteryCollected = false;
 
         }

@@ -11,6 +11,8 @@ TagManager:
   - Enemy
   - Robot
   - Robotsignal
+  - Direction1
+  - Direction2
   layers:
   - Default
   - TransparentFX
@@ -24,8 +26,8 @@ TagManager:
   - Obstacles
   - Enemies
   - PostProccessing
+  - other
   - sword
-  - 
   - 
   - 
   - 

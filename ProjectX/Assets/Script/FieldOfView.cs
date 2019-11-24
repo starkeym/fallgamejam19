@@ -30,7 +30,13 @@ public class FieldOfView : MonoBehaviour {
 
     GameObject player;
 
+    Vector3 direction1;
+
+    Vector3 direction2;
+
     public GameObject RobotSignal;
+
+    
 
     int isDetected = 0;
 
@@ -54,7 +60,7 @@ public class FieldOfView : MonoBehaviour {
 
     int SurroundingMembers = 0;
 
-
+    Vector3 destination;
 
 
 
@@ -76,7 +82,22 @@ public class FieldOfView : MonoBehaviour {
 
         enemy = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
-	}
+
+        foreach (Transform item in gameObject.transform)
+        {
+            if (item.gameObject.name=="Direction1")
+            {
+                direction1 = item.position;
+                Destroy(item.gameObject);
+            }
+            if (item.gameObject.name=="Direction2")
+            {
+                direction2 = item.position;
+                Destroy(item.gameObject);
+            }
+        }
+        destination = direction1;
+    }
 
     IEnumerator FindTargetsWithDelay(float delay)
     {
@@ -268,6 +289,7 @@ public class FieldOfView : MonoBehaviour {
     //atakan ekleme part
     void EnemyBehaviour()
     {
+        RegularPatrol();
         if(aRobotDied==true)
         {
             RobotSignal = GameObject.FindGameObjectWithTag("Robotsignal");
@@ -284,10 +306,21 @@ public class FieldOfView : MonoBehaviour {
     }
     void RegularPatrol()
     {
-        if(this.gameObject.tag !="Standingenemy" || this.gameObject.tag != "Standingrobot")
+        if (this.gameObject.tag !="Standingenemy" || this.gameObject.tag != "Standingrobot" && isDetected == 0)
         {
+            enemy.SetDestination(destination);
+            if (Mathf.Abs(enemy.transform.position.x-direction2.x)<0.5f && Mathf.Abs(enemy.transform.position.z - direction2.z) < 0.5f)
+            {
+                destination = direction1;
+            }
+            else if (Mathf.Abs(enemy.transform.position.x - direction1.x) < 0.5f && Mathf.Abs(enemy.transform.position.z - direction1.z) < 0.5f)
+            {
+                destination = direction2;
+            }
 
         }
+
+
     }
     void Patrolafterdetection()
     {
@@ -330,6 +363,7 @@ public class FieldOfView : MonoBehaviour {
         isDetected = 2;
         
     }
+
    
 
    
