@@ -113,8 +113,9 @@ public class FieldOfView : MonoBehaviour {
         if(this.gameObject.tag == "Standingenemy" || this.gameObject.tag =="Standingrobot" ) { isStandingEnemy = true; }   
         else { isStandingEnemy = false; }
 		DrawFieldOfView ();
-        EnemyBehaviour();
+        
         FindVisibleTargets();
+        EnemyBehaviour();
         Patrolafterdetection();
         
 
@@ -306,19 +307,20 @@ public class FieldOfView : MonoBehaviour {
     }
     void RegularPatrol()
     {
-        if (this.gameObject.tag !="Standingenemy" || this.gameObject.tag != "Standingrobot" && isDetected == 0)
+        if (this.gameObject.tag !="Standingenemy" || this.gameObject.tag != "Standingrobot")
         {
             enemy.SetDestination(destination);
-            if (Mathf.Abs(enemy.transform.position.x-direction2.x)<0.5f && Mathf.Abs(enemy.transform.position.z - direction2.z) < 0.5f)
+            if (Mathf.Abs(enemy.transform.position.x-direction2.x)<0.5f && Mathf.Abs(enemy.transform.position.z - direction2.z) < 0.5f && isDetected==0)
             {
                 destination = direction1;
             }
-            else if (Mathf.Abs(enemy.transform.position.x - direction1.x) < 0.5f && Mathf.Abs(enemy.transform.position.z - direction1.z) < 0.5f)
+            else if (Mathf.Abs(enemy.transform.position.x - direction1.x) < 0.5f && Mathf.Abs(enemy.transform.position.z - direction1.z) < 0.5f && isDetected == 0)
             {
                 destination = direction2;
             }
 
         }
+       
 
 
     }

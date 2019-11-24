@@ -13,6 +13,9 @@ TagManager:
   - Robotsignal
   - Direction1
   - Direction2
+  - Standingenemy
+  - Idcard
+  - Battery
   layers:
   - Default
   - TransparentFX

@@ -28,8 +28,8 @@ public class PlayerScriptFinal : MonoBehaviour
     bool BatteryCollected = false;
     float Health = 100;
 
-
-
+    public static bool elevatoractivated;
+    public float gravity = 20.0f;
 
     void Start()
     {
@@ -40,6 +40,7 @@ public class PlayerScriptFinal : MonoBehaviour
     {
         Movement();
         Attack();
+        moveDirection.y-= gravity * Time.deltaTime;
     }
 
     void Attack()
@@ -162,5 +163,20 @@ public class PlayerScriptFinal : MonoBehaviour
         obj.GetComponent<Rigidbody>().AddExplosionForce(100, SlicerPlane.transform.position, 10);
 
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag=="Idcard")
+        {
+            Destroy(other.gameObject);
+
+
+        }
+        if (other.gameObject.tag == "Battery")
+        {
+            Health += 15;
+            Destroy(other.gameObject);
+        }
+    }
+
 
 }
