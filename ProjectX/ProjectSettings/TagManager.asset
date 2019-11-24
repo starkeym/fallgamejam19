@@ -7,6 +7,10 @@ TagManager:
   - Tags
   - Targets
   - Obstacles
+  - Attackablearea
+  - Enemy
+  - Robot
+  - Robotsignal
   layers:
   - Default
   - TransparentFX

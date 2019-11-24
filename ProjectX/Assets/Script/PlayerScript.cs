@@ -8,6 +8,8 @@ public class PlayerScript : MonoBehaviour
 {
     CharacterController characterController;
 
+    GameObject Attack;
+
     public float speed = 6.0f;
     
     public float gravity = 20.0f;
@@ -23,6 +25,7 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        Attack = GameObject.FindGameObjectWithTag("Attackablearea");
     }
 
     void Update()

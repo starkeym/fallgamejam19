@@ -30,21 +30,31 @@ public class FieldOfView : MonoBehaviour {
 
     GameObject player;
 
+    public GameObject RobotSignal;
+
     int isDetected = 0;
 
     bool isInside = false;
 
     bool PlayerEnteredTheAngle;
 
+    public static bool canbeKilled = false;
+
+    public bool aRobotDied = false;
+
+    bool isStandingEnemy;
+
     Vector3 enemypos;
 
-    public float targetTime = 1.8f;
+    float targetTime = 1.8f;
 
     public float enemyRadius;
 
     public float escapeTime = 3f;
 
     int SurroundingMembers = 0;
+
+
 
 
 
@@ -79,9 +89,12 @@ public class FieldOfView : MonoBehaviour {
 
 
     void LateUpdate() {
+        if(this.gameObject.tag == "Standingenemy" || this.gameObject.tag =="Standingrobot" ) { isStandingEnemy = true; }   
+        else { isStandingEnemy = false; }
 		DrawFieldOfView ();
         EnemyBehaviour();
         FindVisibleTargets();
+        Patrolafterdetection();
         
 
 	}
@@ -100,7 +113,7 @@ public class FieldOfView : MonoBehaviour {
                     Debug.Log("hi1");
                     PlayerEnteredTheAngle = true;
 					visibleTargets.Add (target);
-                    viewRadius += 0.0045f;
+                    
                     isDetected = 1;
                     escapeTime = 3;
                     
@@ -116,6 +129,7 @@ public class FieldOfView : MonoBehaviour {
 			}
             else
             {
+                canbeKilled = true;
                 targetTime = 1.8f;
                 if(isDetected==1)
                 {
@@ -254,9 +268,24 @@ public class FieldOfView : MonoBehaviour {
     //atakan ekleme part
     void EnemyBehaviour()
     {
+        if(aRobotDied==true)
+        {
+            RobotSignal = GameObject.FindGameObjectWithTag("Robotsignal");
+            enemy.SetDestination(RobotSignal.transform.position);
+            StartCoroutine(ComingtoSignal());
+
+        }
         if (isDetected == 1)
         {
             enemy.SetDestination(player.transform.position);
+            
+
+        }
+    }
+    void RegularPatrol()
+    {
+        if(this.gameObject.tag !="Standingenemy" || this.gameObject.tag != "Standingrobot")
+        {
 
         }
     }
@@ -270,19 +299,21 @@ public class FieldOfView : MonoBehaviour {
         
 
     }
+
+  
     
     IEnumerator PatrolRandomizer2()
     {
         if(isDetected ==2)
         {
             enemy.SetDestination(new Vector3(Random.Range(player.transform.position.x + enemyRadius, player.transform.position.x - enemyRadius), transform.position.y, Random.Range(player.transform.position.z + enemyRadius, player.transform.position.z - enemyRadius)));
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1);
             enemy.SetDestination(new Vector3(Random.Range(player.transform.position.x + enemyRadius-1, player.transform.position.x - enemyRadius-1), transform.position.y, Random.Range(player.transform.position.z + enemyRadius-1, player.transform.position.z - enemyRadius-1)));
             yield return new WaitForSeconds(2);
             enemy.SetDestination(new Vector3(Random.Range(player.transform.position.x + enemyRadius-2, player.transform.position.x - enemyRadius-2), transform.position.y, Random.Range(player.transform.position.z + enemyRadius-2, player.transform.position.z - enemyRadius-2)));
             yield return new WaitForSeconds(3);
             isDetected = 0;
-            viewRadius -= 0.0045f;
+            
 
 
         }
@@ -291,6 +322,13 @@ public class FieldOfView : MonoBehaviour {
 
 
 
+    }
+    IEnumerator ComingtoSignal()
+    {
+        yield return new WaitForSeconds(2);
+        aRobotDied = false;
+        isDetected = 2;
+        
     }
    
 
