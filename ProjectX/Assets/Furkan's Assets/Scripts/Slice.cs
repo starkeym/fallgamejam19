@@ -44,7 +44,7 @@ public class Slice : MonoBehaviour
         obj.AddComponent<MeshCollider>().convex = true;
         obj.AddComponent<Rigidbody>();
         obj.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
-        obj.GetComponent<Rigidbody>().AddExplosionForce(20, gameObject.transform.position, 10);
+        obj.GetComponent<Rigidbody>().AddExplosionForce(100, gameObject.transform.position, 10);
 
     }
 
