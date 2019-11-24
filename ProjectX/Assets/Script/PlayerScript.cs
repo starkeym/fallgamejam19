@@ -20,7 +20,7 @@ public class PlayerScript : MonoBehaviour
 
     bool BatteryCollected = false;
 
-    float Health = 100;
+    public static float Health = 100;
 
     void Start()
     {

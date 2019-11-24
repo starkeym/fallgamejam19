@@ -113,14 +113,14 @@ public class FieldOfView : MonoBehaviour {
                     Debug.Log("hi1");
                     PlayerEnteredTheAngle = true;
 					visibleTargets.Add (target);
-                    
+                    canbeKilled = false;
                     isDetected = 1;
                     escapeTime = 3;
                     
                     targetTime -= Time.deltaTime;
                     if (targetTime<0)
                     {
-                        SceneManager.LoadScene("Scene1");
+                        SceneManager.LoadScene("GameScene");
                     }
                    
                    
